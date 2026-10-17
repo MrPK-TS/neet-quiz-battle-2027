@@ -1,0 +1,11 @@
+{
+  "name": "NEET Quiz Battle 2027",
+  "short_name": "NEET Quiz",
+  "description": "Practice NEET UG Biology, Physics and Chemistry with quizzes, track your score, and prepare for NEET 2027.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#1565c0"
+}
