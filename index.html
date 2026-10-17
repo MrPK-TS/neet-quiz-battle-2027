@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101827">
+<title>NEET Quiz Battle</title>
+<style>
+:root{--bg:#101827;--panel:#1a2638;--line:#334155;--lime:#b7f34a;--muted:#b7c4d8;--good:#166534;--bad:#991b1b}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#101827,#172b3b);color:#f8fafc;font:16px system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button{font:inherit;cursor:pointer;touch-action:manipulation}.app{max-width:620px;margin:auto;padding:18px 15px 30px}.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:8px 0 20px}.eyebrow{font-size:11px;letter-spacing:2px;color:var(--lime);font-weight:800}.brand{font-size:27px;font-weight:900;line-height:1.12;margin-top:4px}.scorebox,.stat,.card{background:var(--panel);border:1px solid var(--line);border-radius:17px}.scorebox{padding:10px 15px;text-align:center;min-width:90px}.scorebox small,.stat small{display:block;color:var(--muted);font-size:11px}.scorebox strong{font-size:25px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}.stat{padding:10px 12px}.stat strong{display:block;margin-top:3px;font-size:15px}.subjects{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:15px}.subject{background:#202e42;color:#f8fafc;border:1px solid #43516a;border-radius:12px;padding:11px 4px;font-weight:750;font-size:13px}.subject.active{background:#354b1d;color:#eaffc7;border-color:var(--lime)}.progress{height:7px;background:#344256;border-radius:9px;overflow:hidden;margin:7px 0 15px}.bar{height:100%;width:10%;background:var(--lime);transition:width .2s}.card{padding:17px;margin-bottom:12px}.topic{font-size:11px;letter-spacing:1px;color:var(--lime);font-weight:800;margin-bottom:9px}.question{font-size:19px;font-weight:800;line-height:1.4}.options{display:grid;gap:9px;margin:12px 0}.option{width:100%;text-align:left;padding:13px 14px;background:#202e42;color:#f8fafc;border:1px solid #43516a;border-radius:13px;font-size:14px;line-height:1.4}.option:disabled{cursor:default;opacity:1}.option.correct{background:#14532d;border-color:#4ade80}.option.wrong{background:#7f1d1d;border-color:#f87171}.feedback{background:#172437;border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:12px;line-height:1.5}.muted{color:var(--muted);font-size:13px}.actions{display:flex;gap:9px}.btn{border:0;border-radius:12px;padding:13px 14px;font-weight:850}.primary{background:var(--lime);color:#17210a;flex:2}.secondary{background:#26364a;color:#f8fafc;flex:1;border:1px solid #43516a}.btn:disabled{opacity:.45;cursor:default}.hidden{display:none!important}.result{text-align:center;padding:25px 15px}.result .big{font-size:42px;font-weight:950;color:var(--lime)}.footer{text-align:center;color:#9aabc0;font-size:11px;margin-top:18px}.timer{color:var(--lime)}@media(min-width:520px){.app{padding-top:28px}.question{font-size:21px}}
+</style>
+</head>
+<body><main class="app">
+<header class="top"><div><div class="eyebrow">NEET PRACTICE ARENA</div><div class="brand">QUIZ BATTLE <span aria-hidden="true">🧬</span></div><div class="muted">NCERT practice • Learn from every answer</div></div><div class="scorebox"><small>POINTS</small><strong id="score">0</strong></div></header>
+<section class="stats"><div class="stat"><small>QUESTION</small><strong id="round">1 / 10</strong></div><div class="stat"><small>STREAK</small><strong id="streak">🔥 0</strong></div><div class="stat"><small>ACCURACY</small><strong id="accuracy">—</strong></div></section>
+<nav class="subjects" aria-label="Choose subject"><button class="subject active" data-subject="Biology">🌿 Biology</button><button class="subject" data-subject="Physics">⚡ Physics</button><button class="subject" data-subject="Chemistry">🧪 Chemistry</button></nav>
+<div class="muted" style="display:flex;justify-content:space-between"><span id="progressText">Question 1 of 10</span><span>⏱ <span id="timer" class="timer">00:00</span></span></div><div class="progress"><div class="bar" id="bar"></div></div>
+<section id="quiz">
+<div class="card"><div class="topic" id="topic">HUMAN PHYSIOLOGY</div><div class="question" id="question"></div></div>
+<div class="options" id="options"></div>
+<div class="feedback" id="feedback" aria-live="polite"><strong>🎯 Your challenge</strong><div class="muted" style="margin-top:5px">Pick the best answer. Correct answers earn +4; incorrect answers cost 1 point.</div></div>
+<div class="actions"><button id="skip" class="btn secondary">Skip</button><button id="next" class="btn primary" disabled>Next question →</button></div>
+</section>
+<section id="result" class="card result hidden"><div class="eyebrow">ROUND COMPLETE</div><div class="big" id="finalScore">0</div><h2>Great effort! 🏆</h2><p id="resultText" class="muted"></p><button id="replay" class="btn primary">Play another round ↻</button></section>
+<div class="footer">Unofficial practice game • 10 questions per round • Correct +4 · Wrong −1 · Skip 0</div>
+</main>
+<script>
+const BANK={
+Biology:[
+['Human Physiology','Which part of the nephron reabsorbs the greatest proportion of filtrate?',['Collecting duct','Proximal convoluted tubule','Distal convoluted tubule','Loop of Henle'],1,'The PCT reabsorbs about 65–70% of filtered sodium and water, along with nearly all glucose and amino acids under normal conditions.'],
+['Cell Biology','Which organelle is the major site of ATP production during aerobic respiration?',['Golgi apparatus','Lysosome','Mitochondrion','Ribosome'],2,'The mitochondrial inner membrane houses the electron transport chain and ATP synthase.'],
+['Genetics','A heterozygous tall pea plant (Tt) is crossed with another Tt plant. What fraction of offspring is expected to be dwarf (tt)?',['1/2','1/4','3/4','All'],1,'Tt × Tt gives TT, Tt, Tt and tt. The recessive dwarf phenotype occurs in 1/4 of offspring.'],
+['Human Reproduction','Spermiogenesis refers to the transformation of:',['Spermatogonia into spermatocytes','Spermatids into spermatozoa','Sperm into spermatids','Primary into secondary spermatocytes'],1,'Spermiogenesis is differentiation of haploid spermatids into spermatozoa. Their release from Sertoli cells is spermiation.'],
+['Ecology','Which ecological pyramid is always upright?',['Pyramid of biomass','Pyramid of numbers','Pyramid of energy','All are always upright'],2,'The energy pyramid is always upright because energy is lost between successive trophic levels.'],
+['Molecular Biology','Which enzyme joins Okazaki fragments during DNA replication?',['DNA helicase','DNA ligase','RNA polymerase','Amylase'],1,'DNA ligase seals nicks in the sugar-phosphate backbone, joining adjacent DNA fragments.'],
+['Plant Physiology','Which plant hormone is closely associated with stomatal closure during water stress?',['Auxin','Gibberellin','Abscisic acid','Cytokinin'],2,'ABA promotes stomatal closure during water stress, helping reduce transpiration.'],
+['Evolution','The forelimbs of humans, whales and bats are examples of:',['Analogous organs','Homologous organs','Vestigial organs only','Unrelated structures'],1,'Their basic structural plan is similar due to common ancestry, although their functions differ.'],
+['Biomolecules','Which bond links two amino acids in a protein?',['Glycosidic bond','Phosphodiester bond','Peptide bond','Hydrogen bond only'],2,'A peptide bond forms between the carboxyl group of one amino acid and the amino group of another.'],
+['Cell Cycle','DNA replication occurs during which phase of the cell cycle?',['G1 phase','S phase','G2 phase','M phase'],1,'The S (synthesis) phase of interphase is when DNA is replicated.']],
+Physics:[
+['Current Electricity','A 6 Ω resistor is connected across a 12 V ideal battery. What current flows?',['0.5 A','2 A','6 A','72 A'],1,'Ohm’s law: I = V/R = 12/6 = 2 A.'],
+['Electrostatics','If the distance between two point charges is doubled, the electrostatic force becomes:',['2F','4F','F/2','F/4'],3,'Coulomb’s law gives F ∝ 1/r². Doubling r makes the force one-fourth.'],
+['Kinematics','A body starts from rest and accelerates uniformly at 2 m/s² for 3 s. Its final speed is:',['2 m/s','3 m/s','6 m/s','9 m/s'],2,'Using v = u + at: v = 0 + 2 × 3 = 6 m/s.'],
+['Work and Energy','A 2 kg body moves at 3 m/s. Its kinetic energy is:',['3 J','6 J','9 J','18 J'],2,'K = ½mv² = ½ × 2 × 9 = 9 J.'],
+['Waves','A wave has frequency 50 Hz and wavelength 2 m. Its speed is:',['25 m/s','52 m/s','100 m/s','200 m/s'],2,'Wave speed v = fλ = 50 × 2 = 100 m/s.'],
+['Capacitance','The capacitance of a parallel-plate capacitor increases when:',['Plate area increases','Plate separation increases','The plates are removed','Charge is always zero'],0,'C = εA/d. Increasing plate area A increases capacitance.'],
+['Modern Physics','The SI unit of Planck’s constant is:',['J/s','J·s','N/C','Wb'],1,'From E = hν, h has units of joule-second (J·s).'],
+['Magnetism','The magnetic force on a stationary point charge in a magnetic field is:',['Maximum','Zero','Always equal to qB','Infinite'],1,'F = qvB sin θ. For a stationary charge v = 0, so magnetic force is zero.'],
+['Thermodynamics','For an ideal gas undergoing an isothermal process, the change in internal energy is:',['Positive','Negative','Zero','Always infinite'],2,'Ideal-gas internal energy depends only on temperature. At constant temperature, ΔU = 0.'],
+['Units','The dimensional formula of force is:',['[MLT⁻¹]','[MLT⁻²]','[ML²T⁻²]','[M⁰LT⁻²]'],1,'Force = mass × acceleration, so its dimensions are [M][LT⁻²] = [MLT⁻²].']],
+Chemistry:[
+['Chemical Bonding','The shape of an NH₃ molecule is:',['Trigonal planar','Tetrahedral','Trigonal pyramidal','Linear'],2,'NH₃ has three bond pairs and one lone pair around N. Its molecular shape is trigonal pyramidal.'],
+['Atomic Structure','The maximum number of electrons in the n = 3 shell is:',['8','10','18','32'],2,'Maximum shell capacity is 2n² = 2 × 3² = 18 electrons.'],
+['Organic Chemistry','The IUPAC name of CH₃–CH₂–CH₃ is:',['Methane','Ethane','Propane','Butane'],2,'This saturated hydrocarbon contains three carbon atoms, so its name is propane.'],
+['Periodic Table','Across a period from left to right, atomic radius generally:',['Increases','Decreases','Remains identical','First becomes infinite'],1,'Effective nuclear charge generally increases across a period, attracting electrons more strongly.'],
+['Mole Concept','How many moles are present in 18 g of water? (Molar mass = 18 g mol⁻¹)',['0.5 mol','1 mol','2 mol','18 mol'],1,'Moles = given mass/molar mass = 18/18 = 1 mol.'],
+['Chemical Equilibrium','For an exothermic equilibrium, increasing temperature generally shifts equilibrium:',['Towards products','Towards reactants','No change in all cases','Only towards solids'],1,'Heat acts like a product in an exothermic reaction. Adding heat shifts equilibrium towards reactants.'],
+['Redox','The oxidation number of oxygen in most ordinary oxides is:',['+2','−2','−1 always','0 always'],1,'Oxygen usually has oxidation number −2 in oxides. Peroxides and OF₂ are important exceptions.'],
+['Solutions','The SI unit of amount concentration is:',['mol m⁻³','g mol⁻¹','kg m⁻³ only','mol kg⁻¹'],0,'Amount concentration in SI is mol per cubic metre. Molarity is commonly expressed as mol L⁻¹.'],
+['Hydrocarbons','The general formula of an acyclic alkane is:',['CₙH₂ₙ₊₂','CₙH₂ₙ','CₙH₂ₙ₋₂','CₙHₙ'],0,'Open-chain alkanes have the general formula CₙH₂ₙ₊₂.'],
+['Chemical Kinetics','The unit of the rate constant for a first-order reaction is:',['mol L⁻¹ s⁻¹','s⁻¹','L mol⁻¹ s⁻¹','mol² L⁻²'],1,'For a first-order reaction, rate = k[A], so k has units of inverse time, usually s⁻¹.']]
+};
+let subject='Biology',qs=[],idx=0,score=0,streak=0,correct=0,attempted=0,locked=false,startTime=Date.now(),ticker;
+const $=id=>document.getElementById(id);
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function update(){ $('score').textContent=score;$('round').textContent=Math.min(idx+1,10)+' / 10';$('streak').textContent='🔥 '+streak;$('accuracy').textContent=attempted?Math.round(correct/attempted*100)+'%':'—';$('progressText').textContent='Question '+Math.min(idx+1,10)+' of 10';$('bar').style.width=((idx+1)*10)+'%'}
+function render(){locked=false;const q=qs[idx];$('topic').textContent=q[0].toUpperCase();$('question').textContent=q[1];$('options').innerHTML='';q[2].forEach((s,i)=>{let b=document.createElement('button');b.className='option';b.textContent='ABCD'[i]+'. '+s;b.onclick=()=>answer(i);$('options').appendChild(b)});$('feedback').innerHTML='<strong>🎯 Choose your answer</strong><div class="muted" style="margin-top:5px">Correct: +4 · Incorrect: −1 · Skip: 0</div>';$('next').disabled=true;$('next').textContent=idx===9?'See results →':'Next question →';$('skip').disabled=false;update()}
+function answer(i){if(locked)return;locked=true;let q=qs[idx],ok=i===q[3];attempted++;if(ok){score+=4;correct++;streak++}else{score--;streak=0}Array.from($('options').children).forEach((b,j)=>{b.disabled=true;if(j===q[3])b.classList.add('correct');else if(j===i)b.classList.add('wrong')});$('feedback').innerHTML='<strong style="color:'+(ok?'#86efac':'#fca5a5')+'">'+(ok?'Correct! +4 points 🎉':'Incorrect. −1 point')+'</strong><div style="margin-top:7px;font-size:14px">'+q[4]+'</div>';$('next').disabled=false;$('skip').disabled=true;update()}
+function skip(){if(locked)return;locked=true;streak=0;let q=qs[idx];Array.from($('options').children).forEach(b=>b.disabled=true);$('feedback').innerHTML='<strong>Skipped — no points lost</strong><div style="margin-top:7px;font-size:14px">Answer: '+q[2][q[3]]+'. '+q[4]+'</div>';$('next').disabled=false;$('skip').disabled=true;update()}
+function next(){if(!locked)return;if(idx<9){idx++;render()}else finish()}
+function finish(){clearInterval(ticker);$('quiz').classList.add('hidden');$('result').classList.remove('hidden');$('finalScore').textContent=score+' pts';$('resultText').textContent='Correct: '+correct+'/10 · Attempted: '+attempted+'/10 · Accuracy: '+(attempted?Math.round(correct/attempted*100):0)+'%. '+(score>=30?'Excellent round!':score>=15?'Good practice—review and try again.':'Keep going. Every explanation helps you improve.')}
+function start(){qs=shuffle(BANK[subject]);idx=score=streak=correct=attempted=0;startTime=Date.now();$('quiz').classList.remove('hidden');$('result').classList.add('hidden');render();clearInterval(ticker);ticker=setInterval(()=>{let s=Math.floor((Date.now()-startTime)/1000);$('timer').textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')},1000)}
+document.querySelectorAll('.subject').forEach(b=>b.onclick=()=>{subject=b.dataset.subject;document.querySelectorAll('.subject').forEach(x=>x.classList.toggle('active',x===b));start()});$('skip').onclick=skip;$('next').onclick=next;$('replay').onclick=start;start();
+</script>
+</body></html>
